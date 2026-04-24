@@ -1,5 +1,4 @@
 import os
-import re
 
 from utils.token.syllables_phone_handler import get_syllable_to_phone_map
 
