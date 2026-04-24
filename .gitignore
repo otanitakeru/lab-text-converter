@@ -228,3 +228,5 @@ __marimo__/
 
 !*/.example.txt
 !*/.example/
+
+/scripts_run/*

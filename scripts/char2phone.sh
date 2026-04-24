@@ -13,6 +13,8 @@ INPUT_CHAR_TEXT_FILE_PATH=${1:-../datasets/.example.txt}
 OUTPUT_ROOT_DIR_PATH=${2:-../outputs/char2phone/.example}
 #
 
+[ ! -f "$INPUT_CHAR_TEXT_FILE_PATH" ] && echo "Error: $INPUT_CHAR_TEXT_FILE_PATH not found" && exit 1
+
 date_str=$(date +%Y-%m-%dT%H-%M-%S)
 OUTPUT_DIR_PATH="$OUTPUT_ROOT_DIR_PATH/$date_str"
 
@@ -118,3 +120,19 @@ python lexicon_converter.py \
     --input_text_file_path "$OUTPUT_DIR_PATH/results/features/phone_with_features.txt" \
     --output_lexicon_file_path "$OUTPUT_DIR_PATH/results/lexicon/lexicon.phone.txt" \
     --token_type "phone"
+
+
+line_count_input=$(wc -l < "$INPUT_CHAR_TEXT_FILE_PATH")
+line_count_output=$(wc -l < "$OUTPUT_DIR_PATH/results/char.txt")
+echo ""
+echo "[入力] 漢字かな交じり文の行数: $line_count_input"
+echo "[出力] 漢字かな交じり文の行数: $line_count_output"
+echo "変換率: $(echo "scale=2; $line_count_output / $line_count_input * 100" | bc)%"
+echo ""
+
+echo ""
+echo "辞書ファイルの行数を表示"
+echo "[出力] 漢字かな交じり辞書ファイルの行数: $(wc -l < "$OUTPUT_DIR_PATH/results/lexicon/lexicon.char.txt")"
+echo "[出力] かな辞書ファイルの行数: $(wc -l < "$OUTPUT_DIR_PATH/results/lexicon/lexicon.kana.txt")"
+echo "[出力] 音素辞書ファイルの行数: $(wc -l < "$OUTPUT_DIR_PATH/results/lexicon/lexicon.phone.txt")"
+echo ""
