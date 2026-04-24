@@ -1,0 +1,5 @@
+pyopenjtalk-plus
+neologdn
+num2words
+pyyaml
+jaconv
