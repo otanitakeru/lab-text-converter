@@ -3,7 +3,7 @@ from typing import Literal, Set, Tuple
 
 from utils.text_handler import BufferedTextReader, BufferedTextWriter
 from utils.text_line_parser import parse_text_line
-from utils.token.phone_handler import validate_phones_sequence
+from utils.token.phone_handler import validate_phones
 from utils.token.syllables_handler import split_syllables
 
 
@@ -17,7 +17,7 @@ def _split_kana(kana: str) -> list[str]:
 
 def _split_phone(phone: str) -> list[str]:
     phones = phone.split("-")
-    validate_phones_sequence(phones)
+    validate_phones(phones)
     return phones
 
 
