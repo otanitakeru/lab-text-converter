@@ -39,24 +39,26 @@ def char2kana_pyopenjtalk(
     for n in njd_feature:
         surface = n["string"]
         pron = n["pron"]  # 読み
+        pos = n["pos"]  # 品詞
         pos_group1 = n["pos_group1"]  # 品詞細分類1
         pos_group2 = n["pos_group2"]  # 品詞細分類2
         pos_group3 = n["pos_group3"]  # 品詞細分類3
 
-        if n["pos"] == "記号":
+        if pos == "記号":
             continue
 
-        if ignore_filler and n["pos"] == "フィラー":
+        if ignore_filler and pos == "フィラー":
             continue
 
         # 特殊文字を削除
         for c in "’":
             pron = pron.replace(c, "")
 
-        if simple_morph_analysis and pos_group1 != "*":
-            pos = n["pos"] + "-" + pos_group1.split("／")[0]
+        if simple_morph_analysis:
+            if pos_group1 != "*":
+                pos += "-" + pos_group1
         else:
-            pos = n["pos"]
+            pos += "-" + pos_group1
             if pos_group1 != "*":
                 pos += "-" + pos_group1
                 if pos_group2 != "*":

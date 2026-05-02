@@ -44,13 +44,16 @@ def validate_phones_sequence(phones: list[str]) -> None:
             if phone == "N":
                 raise ValueError("文頭にNが検出されました")
         else:
-            if phones[i - 1] == "N" and phone == "q":
-                raise ValueError("Nの後にqが検出されました")
+            # HACK: "お父さんって"は許容する？
+            # if phones[i - 1] == "N" and phone == "q":
+            #     raise ValueError("Nの後にqが検出されました")
             if phones[i - 1] == "q" and phone == "N":
                 raise ValueError("qの後にNが検出されました")
             if phones[i - 1] == "q" and phone == "q":
                 raise ValueError("連続するqが検出されました")
             if phones[i - 1] == "N" and phone == "N":
                 raise ValueError("連続するNが検出されました")
-            if ":" in phones[i - 1] and phone == "q":
-                raise ValueError("長母音の後にqが検出されました")
+
+            # HACK: "通って"は"とーって"となるので許容する？
+            # if ":" in phones[i - 1] and phone == "q":
+            #     raise ValueError("長母音の後にqが検出されました")
