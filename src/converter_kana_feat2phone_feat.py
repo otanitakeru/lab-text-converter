@@ -24,7 +24,7 @@ def convert_kana_with_features_to_phone(
             try:
                 utt_id, kana_with_features = parse_text_line(line)
             except ValueError:
-                error_w.write_raw(f"parse_text_line ValueError: {line}\n")
+                error_w.write_line(f"[{utt_id}] parse_text_line ValueError: {line}")
                 continue
 
             morphs = kana_with_features.split(" ")
@@ -46,13 +46,13 @@ def convert_kana_with_features_to_phone(
                 validate_phones_sequence(all_phones)
 
             except ValueError as e:
-                error_text = f"kana2phone ValueError: {utt_id} {e}\n"
+                error_text = f"[{utt_id}] kana2phone ValueError: {e}"
                 print(error_text)
-                error_w.write_raw(error_text)
+                error_w.write_line(error_text)
                 continue
 
-            phone_with_features_w.write_raw(
-                f"{utt_id} {" ".join(phones_with_features)}\n"
+            phone_with_features_w.write_line(
+                f"{utt_id} {" ".join(phones_with_features)}"
             )
 
 

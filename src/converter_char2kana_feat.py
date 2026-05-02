@@ -75,7 +75,7 @@ def convert_char_to_kana_with_features(
             try:
                 utt_id, char_text = parse_text_line(line)
             except ValueError:
-                error_w.write_raw(f"parse_text_line ValueError: {line}\n")
+                error_w.write_line(f"[{utt_id}] parse_text_line ValueError: {line}")
                 continue
 
             try:
@@ -90,23 +90,23 @@ def convert_char_to_kana_with_features(
                 )
 
             except Char2KanaError as e:
-                error_text = f"カナに変換できない文字が含まれている可能性があります: {utt_id} {e}\n"
+                error_text = f"[{utt_id}] カナに変換できない文字が含まれている可能性があります: {e}"
                 print(error_text)
-                error_w.write_raw(error_text)
+                error_w.write_line(error_text)
                 continue
             except RuntimeError as e:
                 error_text = (
-                    f"pyopenjtalk でエラーが発生した可能性があります: {utt_id} {e}\n"
+                    f"[{utt_id}] pyopenjtalk でエラーが発生した可能性があります: {e}"
                 )
                 print(error_text)
-                error_w.write_raw(error_text)
+                error_w.write_line(error_text)
                 continue
 
             # 変換の結果、kanaが空になった場合はエラーとする。
             if len(kana_with_features_list) == 0:
-                error_text = f"カナが空になった可能性があります: {utt_id}\n"
+                error_text = f"[{utt_id}] カナが空になった可能性があります"
                 print(error_text)
-                error_w.write_raw(error_text)
+                error_w.write_line(error_text)
                 continue
 
             # pyopenjtalk の警告を取得
@@ -118,14 +118,14 @@ def convert_char_to_kana_with_features(
             # pyopenjtalk の警告がある場合はエラーとする。
             if len(warning_message) > 0:
                 error_text = (
-                    f"pyopenjtalk の警告があります: {utt_id} {warning_message}\n"
+                    f"[{utt_id}] pyopenjtalk の警告があります: {warning_message}"
                 )
                 print(error_text)
                 if ignore_pyopenjtalk_warnings:
-                    error_w.write_raw(error_text)
+                    error_w.write_line(error_text)
                     continue
 
-            kana_w.write_raw(f"{utt_id} {kana_with_features_list}\n")
+            kana_w.write_line(f"{utt_id} {kana_with_features_list}")
 
 
 if __name__ == "__main__":

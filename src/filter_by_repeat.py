@@ -27,12 +27,13 @@ def _run(reader, writer, error_w) -> None:
             utt_id, text = parse_text_line(line)
             has_repeat(text, repeat=repeat)
         except ValueError as e:
+            error_text = f"[{utt_id}] {e}"
             if error_w is not None:
-                error_w.write_raw(f"[{utt_id}] {e}\n")
-            print(f"[{utt_id}] {e}\n")
+                error_w.write_line(error_text)
+            print(error_text)
             continue
 
-        writer.write_raw(f"{utt_id} {text}\n")
+        writer.write_line(f"{utt_id} {text}")
 
 
 if __name__ == "__main__":

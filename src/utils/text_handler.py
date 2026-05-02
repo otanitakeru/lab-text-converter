@@ -44,9 +44,9 @@ class BufferedTextWriter:
     # public API
     # ------------------------------------------------------------------
 
-    def write_raw(self, line: str) -> None:
-        """任意の文字列を1行としてバッファに追加する（末尾改行は呼び出し側で付与）。"""
-        self._buf.append(line)
+    def write_line(self, line: str, end="\n") -> None:
+        """任意の文字列を1行としてバッファに追加する"""
+        self._buf.append(line + end)
         if len(self._buf) >= self._batch_size:
             self.flush()
 

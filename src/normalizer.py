@@ -42,4 +42,4 @@ if __name__ == "__main__":
                 lower_case_only=lower_case_only,
                 delimiter=delimiter,
             )
-            writer.write_raw(f"{utt_id} {normalized_text}\n")
+            writer.write_line(f"{utt_id} {normalized_text}")

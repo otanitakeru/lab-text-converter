@@ -55,7 +55,7 @@ def convert_lexicon(
 
     with BufferedTextWriter(output_lexicon_file_path) as writer:
         for key, value in sorted(result_lexicon):
-            writer.write_raw(f"{key} {value}\n")
+            writer.write_line(f"{key} {value}")
 
 
 if __name__ == "__main__":

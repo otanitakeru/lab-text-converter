@@ -1,5 +1,5 @@
 sudachidict_full
-pyopenjtalk-plus
+pyopenjtalk-plus[onnxruntime]
 neologdn
 num2words
 pyyaml
