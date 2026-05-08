@@ -48,7 +48,6 @@ def convert_char_to_kana_with_features(
     input_char_text_file_path: Path,
     output_kana_with_features_file_path: Path,
     output_error_file_path: Path,
-    ignore_filler: bool = True,
     simple_morph_analysis: bool = True,
     ignore_pyopenjtalk_warnings: bool = True,
 ) -> None:
@@ -61,7 +60,6 @@ def convert_char_to_kana_with_features(
         input_char_text_file_path: 入力テキストファイルのパス。
         output_kana_with_features_file_path: 出力カナファイル（特徴付き）のパス。
         output_error_file_path: 出力エラーファイルのパス。
-        ignore_filler: フィラーを無視するかどうか。
         simple_morph_analysis: シンプルな形態素解析を使用するかどうか。
         ignore_pyopenjtalk_warnings: pyopenjtalk 警告が発生した発話を除外するかどうか。
     """
@@ -83,7 +81,6 @@ def convert_char_to_kana_with_features(
                     _call_capturing_c_stderr(
                         char2kana_pyopenjtalk,
                         char_text,
-                        ignore_filler=ignore_filler,
                         simple_morph_analysis=simple_morph_analysis,
                         include_features=True,
                     )
@@ -139,21 +136,13 @@ if __name__ == "__main__":
     parser.add_argument("--output_error_file_path", type=str, required=True)
 
     parser.add_argument(
-        "--ignore_filler",
-        type=bool,
-        default=True,
-        help="フィラーを無視するかどうか",
-    )
-    parser.add_argument(
         "--simple_morph_analysis",
-        type=bool,
-        default=True,
+        action="store_true",
         help="シンプルな形態素解析を使用するかどうか",
     )
     parser.add_argument(
         "--ignore_pyopenjtalk_warnings",
-        type=bool,
-        default=True,
+        action="store_true",
         help="pyopenjtalkの警告を無視するかどうか (うまく形態素解析ができていない可能性があるものを除去するため)",
     )
     args = parser.parse_args()
@@ -161,7 +150,6 @@ if __name__ == "__main__":
     input_char_text_file_path = Path(args.input_char_text_file_path)
     output_kana_with_features_file_path = Path(args.output_kana_with_features_file_path)
     output_error_file_path = Path(args.output_error_file_path)
-    ignore_filler = args.ignore_filler
     simple_morph_analysis = args.simple_morph_analysis
     ignore_pyopenjtalk_warnings = args.ignore_pyopenjtalk_warnings
 
@@ -169,7 +157,6 @@ if __name__ == "__main__":
         input_char_text_file_path,
         output_kana_with_features_file_path,
         output_error_file_path,
-        ignore_filler=ignore_filler,
         simple_morph_analysis=simple_morph_analysis,
         ignore_pyopenjtalk_warnings=ignore_pyopenjtalk_warnings,
     )

@@ -11,8 +11,10 @@ if __name__ == "__main__":
     parser.add_argument("--input_file_path", type=str, required=True)
     parser.add_argument("--output_file_path", type=str, required=True)
     parser.add_argument("--repeat", type=int, default=None)
-    parser.add_argument("--convert_kanji_from_numbers", type=bool, default=True)
-    parser.add_argument("--lower_case_only", type=bool, default=False)
+    parser.add_argument(
+        "--convert_kanji_from_numbers", action="store_true", default=True
+    )
+    parser.add_argument("--lower_case_only", action="store_true", default=True)
     parser.add_argument("--delimiter", type=str, default="|")
     args = parser.parse_args()
 

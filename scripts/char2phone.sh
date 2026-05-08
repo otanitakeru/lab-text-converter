@@ -50,7 +50,7 @@ grep -Pv "${PRECHECK_PROBLEM_CHARS}" "$OUTPUT_DIR_PATH/data/char.txt" \
 python normalizer.py \
     --input_file_path "$OUTPUT_DIR_PATH/processed/char.precheck_filtered.txt" \
     --output_file_path "$OUTPUT_DIR_PATH/processed/char.precheck_filtered.normalized.txt" \
-    --convert_kanji_from_numbers true \
+    --convert_kanji_from_numbers \
     --delimiter "|"
 
 # 繰り返し音声があるか確認
@@ -60,18 +60,40 @@ python filter_by_repeat.py \
     --output_error_file_path "$OUTPUT_DIR_PATH/processed/.errors/repeat_error.txt" \
     --repeat 5
 
+# "|" を空白に変換
+sed 's/|/ /g' "$OUTPUT_DIR_PATH/processed/char.precheck_filtered.normalized.no_repeat.txt" \
+    > "$OUTPUT_DIR_PATH/processed/char.precheck_filtered.normalized.no_repeat.pipe_replaced.txt"
+
 python converter_char2kana_feat.py \
-    --input_char_text_file_path "$OUTPUT_DIR_PATH/processed/char.precheck_filtered.normalized.no_repeat.txt" \
+    --input_char_text_file_path "$OUTPUT_DIR_PATH/processed/char.precheck_filtered.normalized.no_repeat.pipe_replaced.txt" \
     --output_kana_with_features_file_path "$OUTPUT_DIR_PATH/results/features/kana_with_features.txt" \
     --output_error_file_path "$OUTPUT_DIR_PATH/results/.errors/char2kana_error.txt" \
-    --ignore_filler true \
-    --ignore_pyopenjtalk_warnings true \
-    --simple_morph_analysis true
+    --ignore_pyopenjtalk_warnings \
+    --simple_morph_analysis
 
 python converter_kana_feat2phone_feat.py \
     --input_kana_with_features_text_file_path "$OUTPUT_DIR_PATH/results/features/kana_with_features.txt" \
     --output_phone_with_features_text_file_path "$OUTPUT_DIR_PATH/results/features/phone_with_features.txt" \
     --output_error_file_path "$OUTPUT_DIR_PATH/results/.errors/kana2phone_error.txt"
+
+
+# フィラーの除去
+cp "$OUTPUT_DIR_PATH/results/features/phone_with_features.txt" "$OUTPUT_DIR_PATH/results/features/phone_with_features.tmp.txt"
+awk '{
+    out = $1
+    has_content = 0
+    for (i = 2; i <= NF; i++) {
+        n = split($i, parts, "+")
+        if (n >= 2 && parts[2] ~ /フィラー/) {
+            out = out ""
+        } else {
+            out = out " " $i
+            has_content = 1
+        }
+    }
+    if (has_content) print out
+}' "$OUTPUT_DIR_PATH/results/features/phone_with_features.tmp.txt" > "$OUTPUT_DIR_PATH/results/features/phone_with_features.txt"
+rm "$OUTPUT_DIR_PATH/results/features/phone_with_features.tmp.txt"
 
 # char のみを発話ごとに結合して出力 (フォーマット: "表層形+品詞+読み+音素" → 表層形のみ連結)
 awk '{

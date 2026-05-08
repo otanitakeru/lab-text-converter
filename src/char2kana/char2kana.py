@@ -44,12 +44,6 @@ def char2kana_pyopenjtalk(
         pos_group2 = n["pos_group2"]  # 品詞細分類2
         pos_group3 = n["pos_group3"]  # 品詞細分類3
 
-        if pos == "記号":
-            continue
-
-        if ignore_filler and pos == "フィラー":
-            continue
-
         # 特殊文字を削除
         for c in "’":
             pron = pron.replace(c, "")
@@ -66,7 +60,10 @@ def char2kana_pyopenjtalk(
                     if pos_group3 != "*":
                         pos += "-" + pos_group3
 
-        _is_all_kana(pron)
+        try:
+            _is_all_kana(pron)
+        except Char2KanaError:
+            raise Char2KanaError(f"Detected non-kana character: {surface} {pron} {pos}")
 
         if pron == "ー" and len(features) > 0:
 
